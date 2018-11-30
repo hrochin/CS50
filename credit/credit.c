@@ -1,56 +1,53 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <math.h>
+#include <cs50.h>
 
 int digit_count(long long);
-void get_type(long long);
+bool get_type(long long);
 bool check_sum(long long);
 
 int main(void){
 
     long long credit_card;
 
-    printf("Number: ");
-    scanf("%lld", &credit_card);
+    //printf("Number: ");
+    credit_card = get_long_long("Number: ");
 
-    if(check_sum(credit_card)){
-        printf("Valid\n");
+    if(check_sum(credit_card) && get_type(credit_card)){
+        printf("VALID\n");
     }
     else{
-        printf("Invalid\n");
+        printf("INVALID\n");
     }
-    get_type(credit_card);
+
     return 0;
 }
 
 int digit_count(long long number){
-    int count = 0;
 
-    while(number > 0){
-        number /= 10;
-        count++;
-    }
-    return count;
+    return (int)(log10(number)+1);
 }
 
-void get_type(long long number){
+bool get_type(long long number){
     // check type
     int count = digit_count(number);
     long long int_div = pow(10, count - 2);
     int type = (int)(number/int_div);
 
     if((type == 34 || type == 37) && count == 15){
-        printf("Amex\n");
+        printf("AMEX\n");
+        return true;
     }
     else if(type >= 51 && type <= 55 && count == 16){
-        printf("MasterCard\n");
+        printf("MASTERCARD\n");
+        return true;
     }
     else if( (type >= 40 && type <= 49) && (count == 13 || count == 16)){
-        printf("Visa\n");
+        printf("VISA\n");
+        return true;
     }
-    else{
-        printf("Unknown Vendor\n");
-    }
+    return false;
 }
 
 bool check_sum(long long number){
